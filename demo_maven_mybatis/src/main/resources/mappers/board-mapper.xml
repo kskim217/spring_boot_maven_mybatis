@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="boardmapper">
+	<select id="selectBoardList" parameterType="hashmap" resultType="com.example.mobel.BoardVo">
+		SELECT SRNO 
+		     , TITLE
+			 , CONTENTS
+			 , USER_ID userId
+			 , TYPE
+			 , TO_CHAR(REG_DATE,'YYYY-MM-DD HH24:MI:SS') REGDATE 
+		  FROM BOARD
+	</select>
+	<select id="getBoard" parameterType="string" resultType="com.example.mobel.BoardVo">
+		SELECT SRNO 
+		     , TITLE
+			 , CONTENTS
+			 , USER_ID USERID
+			 , TYPE
+			 , TO_CHAR(REG_DATE,'YYYY-MM-DD HH24:MI:SS') REGDATE 
+		  FROM BOARD
+		 WHERE SRNO = #{srno}
+	</select>
+	<insert id="insertBoard" parameterType="com.example.mobel.BoardVo">
+		<selectKey resultType="string" keyProperty="srno" order="BEFORE">
+		    SELECT NVL(MAX(SRNO) + 1,1) SRNO FROM BOARD
+		</selectKey>
+		INSERT INTO BOARD
+		     (
+		     	  SRNO 
+		     	, TITLE
+			 	, CONTENTS
+			 	, USER_ID
+		     ) VALUES (
+		     	  #{srno}
+		     	, #{title}
+		     	, #{contents}
+		     	, #{userId}
+		     )
+	</insert>
+	
+	<update id="updateBoard" parameterType="com.example.mobel.BoardVo">
+		UPDATE BOARD SET TITLE = #{title}
+		               , CONTENTS = #{contents}
+		           WHERE SRNO = #{srno}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="string">
+		DELETE BOARD WHERE SRNO = #{srno}
+	</delete>
+</mapper>
